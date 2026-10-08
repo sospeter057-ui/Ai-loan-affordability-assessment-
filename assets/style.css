@@ -1,0 +1,240 @@
+:root {
+    --bg: #f4f6fa;
+    --surface: #ffffff;
+    --border: #e2e7f0;
+    --text: #1b2437;
+    --muted: #63708c;
+    --accent: #2f5fd0;
+    --accent-dark: #24499f;
+    --good: #1a8f5f;
+    --warn: #c47f0a;
+    --bad: #c6353b;
+    --radius: 12px;
+    --chart-h: 430px;
+    --shadow: 0 1px 3px rgba(20, 32, 60, .07), 0 6px 18px rgba(20, 32, 60, .05);
+}
+
+* { box-sizing: border-box; }
+
+body {
+    margin: 0;
+    background: var(--bg);
+    color: var(--text);
+    font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Inter, Roboto, sans-serif;
+    -webkit-font-smoothing: antialiased;
+}
+
+.app { max-width: 1400px; margin: 0 auto; padding: 0 24px 56px; }
+
+/* ---------- header ---------- */
+.header {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 20px;
+    align-items: center;
+    justify-content: space-between;
+    padding: 28px 0 22px;
+}
+.header h1 { margin: 0 0 6px; font-size: 25px; letter-spacing: -.02em; }
+.header p { margin: 0; color: var(--muted); font-size: 14px; max-width: 62ch; }
+.header-actions { display: flex; gap: 10px; flex-wrap: wrap; }
+
+/* ---------- buttons ---------- */
+.upload-btn, .secondary-btn, .primary-btn {
+    font: inherit;
+    font-size: 14px;
+    font-weight: 500;
+    padding: 9px 17px;
+    border-radius: 8px;
+    border: 1px solid var(--border);
+    background: var(--surface);
+    color: var(--text);
+    cursor: pointer;
+    transition: background .15s, border-color .15s, transform .05s;
+}
+.upload-btn:hover, .secondary-btn:hover { border-color: #c3ccdd; background: #fbfcfe; }
+.primary-btn {
+    background: var(--accent);
+    border-color: var(--accent);
+    color: #fff;
+    grid-column: 1 / -1;
+    justify-self: start;
+    padding: 10px 26px;
+}
+.primary-btn:hover { background: var(--accent-dark); border-color: var(--accent-dark); }
+.upload-btn:active, .secondary-btn:active, .primary-btn:active { transform: translateY(1px); }
+
+/* ---------- tabs ---------- */
+.tabs { margin-bottom: 26px; border-bottom: 1px solid var(--border); }
+.tabs .tab {
+    border: none !important;
+    background: transparent !important;
+    color: var(--muted) !important;
+    font-size: 14px !important;
+    font-weight: 500 !important;
+    padding: 12px 18px !important;
+    border-bottom: 2px solid transparent !important;
+}
+.tabs .tab--selected {
+    color: var(--accent) !important;
+    border-bottom: 2px solid var(--accent) !important;
+}
+
+/* ---------- metric cards ---------- */
+.metrics {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(190px, 1fr));
+    gap: 16px;
+    margin-bottom: 22px;
+}
+.metric-card {
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: var(--radius);
+    padding: 18px 20px;
+    box-shadow: var(--shadow);
+}
+.metric-title {
+    font-size: 12px;
+    font-weight: 600;
+    text-transform: uppercase;
+    letter-spacing: .06em;
+    color: var(--muted);
+    margin-bottom: 8px;
+}
+.metric-value { font-size: 24px; font-weight: 650; letter-spacing: -.02em; }
+.metric-sub { font-size: 12px; color: var(--muted); margin-top: 4px; }
+
+/* ---------- layout ---------- */
+.grid-2 {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(440px, 1fr));
+    grid-auto-rows: var(--chart-h);
+    gap: 18px;
+    margin-bottom: 18px;
+}
+
+/* Plotly charts size themselves to their container, so the container must
+   have a resolved height. Inside a stretch-aligned grid whose rows are sized
+   by content, a percentage height is circular - the chart grows to fill the
+   row, the row grows to fit the chart - and the graph stretches without
+   bound. Pin the height here and let Plotly fill it. */
+.dash-graph {
+    height: var(--chart-h);
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: var(--radius);
+    box-shadow: var(--shadow);
+    overflow: hidden;
+}
+.grid-2 > .dash-graph { height: 100%; margin: 0; }
+
+/* dcc.Graph renders TWO children: a zero-height wrapper div and the plot
+   itself. Size only the plot - a blanket `.dash-graph > div` rule stretches
+   both, stacking them to twice the container height and pushing the chart
+   out of the clipped box. Plotly sizes its own internals from here. */
+.dash-graph > .js-plotly-plot { height: 100% !important; }
+
+/* Charts rendered outside the two-column grid (Repayment & Forecast). */
+#page-content > .dash-graph { margin-bottom: 18px; }
+
+.section-intro { margin-bottom: 22px; }
+.section-intro h2 { margin: 0 0 6px; font-size: 20px; letter-spacing: -.02em; }
+.section-intro p { margin: 0; color: var(--muted); font-size: 14px; max-width: 80ch; }
+
+.control-card, .result-card {
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: var(--radius);
+    padding: 20px;
+    box-shadow: var(--shadow);
+    margin-bottom: 20px;
+}
+.control-card label, .sim-grid label {
+    display: block;
+    font-size: 12px;
+    font-weight: 600;
+    text-transform: uppercase;
+    letter-spacing: .06em;
+    color: var(--muted);
+    margin-bottom: 7px;
+}
+.result-card h3 { margin: 0 0 12px; font-size: 16px; }
+.result-card p { margin: 0 0 8px; font-size: 14px; color: #33405c; }
+.decision { font-weight: 650 !important; color: var(--accent) !important; font-size: 15px !important; }
+
+/* ---------- simulator ---------- */
+.sim-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(210px, 1fr));
+    gap: 16px;
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: var(--radius);
+    padding: 22px;
+    box-shadow: var(--shadow);
+    margin-bottom: 22px;
+}
+.input {
+    width: 100%;
+    font: inherit;
+    font-size: 14px;
+    padding: 9px 12px;
+    border: 1px solid var(--border);
+    border-radius: 8px;
+    background: #fff;
+    color: var(--text);
+}
+.input:focus { outline: none; border-color: var(--accent); box-shadow: 0 0 0 3px rgba(47, 95, 208, .13); }
+.simulation-result h3 { font-size: 19px; margin: 0 0 16px; letter-spacing: -.02em; }
+.simulation-result > p { font-size: 13px; color: var(--muted); }
+
+.alert {
+    background: #fff6e8;
+    border: 1px solid #f0d9ad;
+    color: #875310;
+    border-radius: 8px;
+    padding: 13px 16px;
+    font-size: 14px;
+}
+
+/* ---------- data table ---------- */
+h2 { letter-spacing: -.02em; }
+.dash-table-container { background: var(--surface); border-radius: var(--radius); padding: 10px; box-shadow: var(--shadow); }
+
+/* ---------- assistant ---------- */
+.chat-window {
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: var(--radius);
+    box-shadow: var(--shadow);
+    padding: 20px;
+    min-height: 340px;
+    max-height: 56vh;
+    overflow-y: auto;
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+    margin-bottom: 14px;
+}
+.chat-bubble {
+    max-width: 76%;
+    padding: 11px 15px;
+    border-radius: 14px;
+    font-size: 14px;
+    line-height: 1.55;
+    white-space: pre-wrap;
+}
+.chat-bubble.user { align-self: flex-end; background: var(--accent); color: #fff; border-bottom-right-radius: 4px; }
+.chat-bubble.bot { align-self: flex-start; background: #eef1f7; color: var(--text); border-bottom-left-radius: 4px; }
+.chat-empty { color: var(--muted); font-size: 14px; margin: auto; text-align: center; }
+.chat-input-row { display: flex; gap: 10px; }
+.chat-input-row .input { flex: 1; }
+.chat-input-row .primary-btn { grid-column: auto; }
+
+@media (max-width: 760px) {
+    .app { padding: 0 16px 40px; }
+    :root { --chart-h: 340px; }
+    .grid-2 { grid-template-columns: 1fr; }
+    .chat-bubble { max-width: 90%; }
+}
