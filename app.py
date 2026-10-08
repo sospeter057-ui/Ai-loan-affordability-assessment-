@@ -17,8 +17,16 @@ MODEL_DIR = os.path.join(BASE,"models")
 
 # Reads the ANTHROPIC_API_KEY environment variable automatically.
 # Set it before running: export ANTHROPIC_API_KEY="sk-ant-..."
+# Built lazily so the dashboard still starts without a key - only the
+# Assistant tab needs one.
 CLAUDE_MODEL = "claude-sonnet-5"
-claude_client = anthropic.Anthropic()
+_claude_client = None
+
+def claude():
+    global _claude_client
+    if _claude_client is None:
+        _claude_client = anthropic.Anthropic()
+    return _claude_client
 
 app = Dash(__name__, suppress_callback_exceptions=True, title="AI Loan Affordability")
 server = app.server
@@ -245,7 +253,7 @@ def handle_chat(n_clicks, n_submit, message, history, stored):
     history.append({"role": "user", "content": message})
 
     try:
-        response = claude_client.messages.create(
+        response = claude().messages.create(
             model=CLAUDE_MODEL,
             max_tokens=600,
             system=(
